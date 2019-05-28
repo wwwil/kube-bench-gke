@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kube-bench
+spec:
+  template:
+    spec:
+      hostPID: true
+      containers:
+      - name: kube-bench
+        image: aquasec/kube-bench:latest
+        command: ["kube-bench", "--version", "1.12-gke"]
+        volumeMounts:
+        - name: var-lib-kubelet
+          mountPath: /var/lib/kubelet
+        - name: etc-systemd
+          mountPath: /etc/systemd
+        - name: home-kubernetes
+          mountPath: /home/kubernetes
+        - name: kube-bench-gke
+          mountPath: /opt/kube-bench/cfg/1.12-gke
+      restartPolicy: Never
+      volumes:
+      - name: var-lib-kubelet
+        hostPath:
+          path: "/var/lib/kubelet"
+      - name: etc-systemd
+        hostPath:
+          path: "/etc/systemd"
+      - name: home-kubernetes
+        hostPath:
+          path: "/home/kubernetes"
+      - name: kube-bench-gke
+        configMap:
+          name: kube-bench-gke
+          items:
+          - key: config.yaml
+            path: config.yaml
+          - key: node.yaml
+            path: node.yaml

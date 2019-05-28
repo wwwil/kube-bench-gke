@@ -1,0 +1,8 @@
+resources:
+- job-gke.yaml
+
+configMapGenerator:
+- name: kube-bench-gke
+  files:
+    - config.yaml
+    - node.yaml
