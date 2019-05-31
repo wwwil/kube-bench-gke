@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: kube-bench
+  name: kube-bench-node
 spec:
   template:
     spec:
@@ -9,7 +9,11 @@ spec:
       containers:
       - name: kube-bench
         image: aquasec/kube-bench:latest
-        command: ["kube-bench", "--version", "1.12-gke"]
+        command:
+        - "kube-bench"
+        - "node"
+        - "--version"
+        - "1.12-gke"
         volumeMounts:
         - name: var-lib-kubelet
           mountPath: /var/lib/kubelet
@@ -17,7 +21,7 @@ spec:
           mountPath: /etc/systemd
         - name: home-kubernetes
           mountPath: /home/kubernetes
-        - name: kube-bench-gke
+        - name: kube-bench-cfg
           mountPath: /opt/kube-bench/cfg/1.12-gke
       restartPolicy: Never
       volumes:
@@ -30,11 +34,6 @@ spec:
       - name: home-kubernetes
         hostPath:
           path: "/home/kubernetes"
-      - name: kube-bench-gke
+      - name: kube-bench-cfg
         configMap:
-          name: kube-bench-gke
-          items:
-          - key: config.yaml
-            path: config.yaml
-          - key: node.yaml
-            path: node.yaml
+          name: kube-bench-cfg-1.12-gke
