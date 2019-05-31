@@ -37,3 +37,61 @@ spec:
       - name: kube-bench-cfg
         configMap:
           name: kube-bench-cfg-1.12-gke
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kube-bench-master
+spec:
+  template:
+    spec:
+      hostPID: true
+      initContainers:
+      - name: gke-describe
+        image: google/cloud-sdk:latest
+        command:
+        - "/gke-describe-script/gke-describe.sh"
+        args:
+        # First arg is key file for GCP service account
+        - "/gcp-sa-key/key.json"
+        # Second arg is output file
+        - "/gke-describe-output/gke-describe.yaml"
+        volumeMounts:
+        - name: gke-describe-script
+          mountPath: "/gke-describe-script"
+          readOnly: true
+        - name: gke-describe-output
+          mountPath: "/gke-describe-output"
+        - name: gcp-sa-key
+          mountPath: "/gcp-sa-key"
+          readOnly: true
+      containers:
+      - name: kube-bench
+        image: aquasec/kube-bench:latest
+        command:
+        - "kube-bench"
+        args:
+        - "master"
+        - "--version"
+        - "1.12-gke"
+        volumeMounts:
+        - name: gke-describe-output
+          mountPath: /gke-describe-output
+          readOnly: true
+        - name: kube-bench-cfg
+          mountPath: /opt/kube-bench/cfg/1.12-gke
+          readOnly: true
+      restartPolicy: Never
+      volumes:
+      - name: gke-describe-script
+        configMap:
+          name: gke-describe-script
+          defaultMode: 0777
+      - name: gke-describe-output
+        emptyDir: {}
+      - name: kube-bench-cfg
+        configMap:
+          name: kube-bench-cfg-1.12-gke
+      - name: gcp-sa-key
+        secret:
+          secretName: gcp-sa-key

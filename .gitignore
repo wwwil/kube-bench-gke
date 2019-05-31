@@ -1,1 +1,4 @@
+key.json
+gke-describe.yaml
+kube-bench-master.logs
 kube-bench-node.logs

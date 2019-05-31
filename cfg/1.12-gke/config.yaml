@@ -1,4 +1,16 @@
 ---
+master:
+  # kube-bench has no restriction on components so we can define our own for
+  # GKE and remove the normal master components as they are not accessible.
+  components:
+    - gke
+
+  gke:
+    # This file is the output of running `gcloud container clusters describe
+    # <cluster-name>` which is done by an init container defined in
+    # job-gke.yaml
+    defaultconf: /gke-describe-output/gke-describe.yaml
+
 node:
   kubernetes:
     confs:
