@@ -2,7 +2,7 @@ resources:
 - job-gke.yaml
 
 configMapGenerator:
-- name: kube-bench-gke
+- name: kube-bench-cfg-1.12-gke
   files:
-    - config.yaml
-    - node.yaml
+  - cfg/1.12-gke/config.yaml
+  - cfg/1.12-gke/node.yaml
