@@ -10,7 +10,7 @@ This is based on the [kube-bench EKS job](https://github.com/aquasecurity/kube-b
 
 ## master
 
-Checking the master on GKE is not conventionally possible using kube-bench as it's not possible to access the master nodes.
+Checking the master on GKE is not conventionally possible using kube-bench as it's not possible to access the master nodes. Some work in progress exploration of running master tests against the GKE config can be found in [this pull request](https://github.com/wwwil/kube-bench-gke/pull/1).
 
 ## deploying
 
