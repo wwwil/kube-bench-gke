@@ -5,4 +5,14 @@ configMapGenerator:
 - name: kube-bench-cfg-1.12-gke
   files:
   - cfg/1.12-gke/config.yaml
+  - cfg/1.12-gke/master.yaml
   - cfg/1.12-gke/node.yaml
+- name: gke-describe-script
+  files:
+  - scripts/gke-describe.sh
+
+secretGenerator:
+- name: gcp-sa-key
+  files:
+    - key.json
+  type: Opaque
